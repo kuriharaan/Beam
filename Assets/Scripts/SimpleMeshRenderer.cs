@@ -3,6 +3,9 @@ using System.Collections;
 
 public class SimpleMeshRenderer : MonoBehaviour
 {
+    [SerializeField]
+    Material material;
+
     Mesh       mesh;
     MeshFilter meshFilter;
 
@@ -13,6 +16,11 @@ public class SimpleMeshRenderer : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        var meshRenderer = gameObject.AddComponent<MeshRenderer>();
+        if( null != meshRenderer )
+        {
+            meshRenderer.material = material;
+        }
         meshFilter = gameObject.AddComponent<MeshFilter>();
         if( null == meshFilter )
         {
@@ -21,8 +29,6 @@ public class SimpleMeshRenderer : MonoBehaviour
 
         mesh      = new Mesh();
         mesh.name = "SimplePlane";
-
-        Debug.Log(mesh.GetTopology(0));
 
         Vector3[] vertices = new Vector3[]
         {
@@ -33,8 +39,9 @@ public class SimpleMeshRenderer : MonoBehaviour
         };
         int[] triangles = new int[]
         {
-            0, 1, 2,
-            3, 1, 0
+            //0, 1, 2,
+            //0,
+            0, 2, 1, 3, 0,
         };
         Vector2[] uv = new Vector2[]
         {
@@ -50,14 +57,12 @@ public class SimpleMeshRenderer : MonoBehaviour
         colors[2] = Color.yellow;
         colors[3] = Color.green;
 
-        mesh.vertices  = vertices;
-        mesh.triangles = triangles;
+        mesh.vertices = vertices;
+        mesh.SetIndices(triangles, MeshTopology.LineStrip, 0);
         mesh.uv        = uv;
         mesh.colors    = colors;
-        mesh.RecalculateNormals();
+        //mesh.RecalculateNormals();
         mesh.RecalculateBounds();
-
-        mesh.SetIndices(triangles, MeshTopology.Lines, 0);
 
         meshFilter.mesh = mesh;
     }
