@@ -66,4 +66,26 @@ public class SimpleMeshRenderer : MonoBehaviour
 
         meshFilter.mesh = mesh;
     }
+
+    void Update()
+    {
+
+        Vector3[] vertices = new Vector3[]
+        {
+            transform.position,
+            transform.position + transform.forward * 100.0f
+        };
+
+
+        int[] triangles = new int[]
+        {
+            0, 1
+        };
+
+        mesh.SetIndices(triangles, MeshTopology.LineStrip, 0);
+        mesh.vertices = vertices;
+        mesh.RecalculateBounds();
+
+        meshFilter.mesh = mesh;
+    }
 }
