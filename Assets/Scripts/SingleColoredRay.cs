@@ -7,9 +7,6 @@ public class SingleColoredRay : MonoBehaviour
     [SerializeField]
     Material material;
 
-    [SerializeField]
-    Color rayColor;
-
     Mesh       mesh;
     MeshFilter meshFilter;
 
@@ -71,7 +68,6 @@ public class SingleColoredRay : MonoBehaviour
 
         mesh.vertices = vertices;
         mesh.SetIndices(triangles, MeshTopology.LineStrip, 0);
-        mesh.colors = new Color[] { rayColor, rayColor };
         mesh.RecalculateBounds();
 
         meshFilter.mesh = mesh;
