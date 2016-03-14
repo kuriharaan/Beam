@@ -7,9 +7,6 @@ public class SingleColoredRay : MonoBehaviour
     [SerializeField]
     Material material;
 
-    [SerializeField]
-    Color rayColor;
-
     Mesh       mesh;
     MeshFilter meshFilter;
 
@@ -55,13 +52,13 @@ public class SingleColoredRay : MonoBehaviour
     {
         Vector3[] vertices = new Vector3[]
         {
-            transform.position,
-            transform.position + transform.forward * 100.0f
+            Vector3.zero,
+            transform.forward * 100.0f
         };
 
         if( 0 < hitPositions.Count )
         {
-            vertices[1] = hitPositions[0];
+            vertices[1] = hitPositions[0] - transform.position;
         }
 
         int[] triangles = new int[]
@@ -71,7 +68,6 @@ public class SingleColoredRay : MonoBehaviour
 
         mesh.vertices = vertices;
         mesh.SetIndices(triangles, MeshTopology.LineStrip, 0);
-        mesh.colors = new Color[] { rayColor, rayColor };
         mesh.RecalculateBounds();
 
         meshFilter.mesh = mesh;
