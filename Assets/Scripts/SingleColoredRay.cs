@@ -14,7 +14,12 @@ public class SingleColoredRay : MonoBehaviour
     int[]      triangles;
     Vector2[]  uvs;
 
-    List<Vector3> hitPositions = new List<Vector3>();
+    struct Segment
+    {
+        public Vector3 p0;
+        public Vector3 p1;
+    }
+    List<Segment> segments = new List<Segment>();
 
     // Use this for initialization
     void Start()
@@ -32,16 +37,15 @@ public class SingleColoredRay : MonoBehaviour
 
         mesh      = new Mesh();
         mesh.name = "Ray";
-        UpdateColor();
     }
 
     void Update()
     {
-        hitPositions.Clear();
+        segments.Clear();
 
         Vector3 castPosition = transform.position;
         Vector3 forward = transform.forward;
-        for (int i = 0; i < 2; ++i  )
+        for (int i = 0; i < 100; ++i  )
         {
             RaycastHit hitInfo;
             if (!Physics.Raycast(castPosition, forward, out hitInfo))
@@ -49,40 +53,40 @@ public class SingleColoredRay : MonoBehaviour
                 break;
             }
 
-            hitPositions.Add(hitInfo.point);
+            Segment seg;
+            seg.p0 = castPosition;
+            seg.p1 = hitInfo.point;
+            segments.Add(seg);
 
             castPosition = hitInfo.point;
             forward = Vector3.Reflect(forward, hitInfo.normal);
         }
 
-        Debug.Log(hitPositions.Count);
+        Segment segLast;
+        segLast.p0 = castPosition;
+        segLast.p1 = forward * 100.0f + castPosition;
+        segments.Add(segLast);
 
         UpdateColor();
-
     }
 
     void UpdateColor()
     {
-        Vector3[] vertices = new Vector3[]
-        {
-            Vector3.zero,
-            transform.forward * 100.0f
-        };
+        Vector3[] vertices = new Vector3[segments.Count + 1];
+        vertices[0] = segments[0].p0;
 
-        if( 0 < hitPositions.Count )
+        for (int i = 0; i < segments.Count; ++i )
         {
-            vertices[1] = transform.InverseTransformPoint(hitPositions[0]);
-        }
-        else
-        {
-            vertices[1] = transform.InverseTransformPoint(vertices[1]);
+            vertices[i + 1] = transform.InverseTransformPoint(segments[i].p1);
         }
 
-        int[] triangles = new int[]
+        int[] triangles = new int[segments.Count + 1];
+        for( int i = 0; i < segments.Count + 1; ++i )
         {
-            0, 1
-        };
+            triangles[i] = i;
+        }
 
+        mesh.Clear();
         mesh.vertices = vertices;
         mesh.SetIndices(triangles, MeshTopology.LineStrip, 0);
         mesh.RecalculateBounds();
