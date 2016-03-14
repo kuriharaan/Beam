@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 public class SingleColoredRay : MonoBehaviour
 {
@@ -17,8 +16,6 @@ public class SingleColoredRay : MonoBehaviour
     int[]      triangles;
     Vector2[]  uvs;
 
-    List<Vector3> hitPositions = new List<Vector3>();
-
     // Use this for initialization
     void Start()
     {
@@ -34,21 +31,13 @@ public class SingleColoredRay : MonoBehaviour
         }
 
         mesh      = new Mesh();
-        mesh.name = "Ray";
+        mesh.name = "SimplePlane";
         UpdateColor();
     }
 
     void Update()
     {
-        hitPositions.Clear();
-        RaycastHit hitInfo;
-        if (Physics.Raycast(transform.position, transform.forward, out hitInfo))
-        {
-            hitPositions.Add(hitInfo.point);
-        }
-
         UpdateColor();
-
     }
 
     void UpdateColor()
@@ -59,10 +48,6 @@ public class SingleColoredRay : MonoBehaviour
             transform.position + transform.forward * 100.0f
         };
 
-        if( 0 < hitPositions.Count )
-        {
-            vertices[1] = hitPositions[0];
-        }
 
         int[] triangles = new int[]
         {
