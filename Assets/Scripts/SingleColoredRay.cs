@@ -38,11 +38,24 @@ public class SingleColoredRay : MonoBehaviour
     void Update()
     {
         hitPositions.Clear();
-        RaycastHit hitInfo;
-        if (Physics.Raycast(transform.position, transform.forward, out hitInfo))
+
+        Vector3 castPosition = transform.position;
+        Vector3 forward = transform.forward;
+        for (int i = 0; i < 2; ++i  )
         {
+            RaycastHit hitInfo;
+            if (!Physics.Raycast(castPosition, forward, out hitInfo))
+            {
+                break;
+            }
+
             hitPositions.Add(hitInfo.point);
+
+            castPosition = hitInfo.point;
+            forward = Vector3.Reflect(forward, hitInfo.normal);
         }
+
+        Debug.Log(hitPositions.Count);
 
         UpdateColor();
 
@@ -58,7 +71,11 @@ public class SingleColoredRay : MonoBehaviour
 
         if( 0 < hitPositions.Count )
         {
-            vertices[1] = hitPositions[0] - transform.position;
+            vertices[1] = transform.InverseTransformPoint(hitPositions[0]);
+        }
+        else
+        {
+            vertices[1] = transform.InverseTransformPoint(vertices[1]);
         }
 
         int[] triangles = new int[]
