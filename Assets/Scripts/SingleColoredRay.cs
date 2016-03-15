@@ -10,16 +10,7 @@ public class SingleColoredRay : MonoBehaviour
     Mesh       mesh;
     MeshFilter meshFilter;
 
-    Vector3[]  vertices;
-    int[]      triangles;
-    Vector2[]  uvs;
-
-    struct Segment
-    {
-        public Vector3 p0;
-        public Vector3 p1;
-    }
-    List<Segment> segments = new List<Segment>();
+    List<Vector3> vertexList = new List<Vector3>();
 
     // Use this for initialization
     void Start()
@@ -41,7 +32,7 @@ public class SingleColoredRay : MonoBehaviour
 
     void Update()
     {
-        segments.Clear();
+        vertexList.Clear();
 
         Vector3 castPosition = transform.position;
         Vector3 forward = transform.forward;
@@ -53,35 +44,29 @@ public class SingleColoredRay : MonoBehaviour
                 break;
             }
 
-            Segment seg;
-            seg.p0 = castPosition;
-            seg.p1 = hitInfo.point;
-            segments.Add(seg);
+            vertexList.Add(hitInfo.point);
 
             castPosition = hitInfo.point;
             forward = Vector3.Reflect(forward, hitInfo.normal);
         }
 
-        Segment segLast;
-        segLast.p0 = castPosition;
-        segLast.p1 = forward * 100.0f + castPosition;
-        segments.Add(segLast);
+        vertexList.Add(forward * 100.0f + castPosition);
 
         UpdateColor();
     }
 
     void UpdateColor()
     {
-        Vector3[] vertices = new Vector3[segments.Count + 1];
-        vertices[0] = segments[0].p0;
+        Vector3[] vertices = new Vector3[vertexList.Count + 1];
+        vertices[0] = Vector3.zero;
 
-        for (int i = 0; i < segments.Count; ++i )
+        for (int i = 0; i < vertexList.Count; ++i)
         {
-            vertices[i + 1] = transform.InverseTransformPoint(segments[i].p1);
+            vertices[i + 1] = transform.InverseTransformPoint(vertexList[i]);
         }
 
-        int[] triangles = new int[segments.Count + 1];
-        for( int i = 0; i < segments.Count + 1; ++i )
+        int[] triangles = new int[vertexList.Count + 1];
+        for (int i = 0; i < vertexList.Count + 1; ++i)
         {
             triangles[i] = i;
         }
