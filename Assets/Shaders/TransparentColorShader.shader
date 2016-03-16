@@ -8,7 +8,7 @@
 
         Pass {
             Tags { "RenderType" = "Transparent" "Queue"="Transparent" }
-            Blend SrcAlpha OneMinusSrcAlpha
+            Blend SrcAlpha One
 
             CGPROGRAM
             #pragma vertex vert

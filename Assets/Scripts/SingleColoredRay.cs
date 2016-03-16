@@ -7,10 +7,15 @@ public class SingleColoredRay : MonoBehaviour
     [SerializeField]
     Material material;
 
+    [SerializeField]
+    GameObject hitParticle;
+
     Mesh       mesh;
     MeshFilter meshFilter;
 
     List<Vector3> vertexList = new List<Vector3>();
+
+    GameObject particle;
 
     // Use this for initialization
     void Start()
@@ -42,6 +47,11 @@ public class SingleColoredRay : MonoBehaviour
             if (!Physics.Raycast(castPosition, forward, out hitInfo))
             {
                 break;
+            }
+
+            if ( (null == particle) && ( null != hitParticle ) )
+            {
+                particle = Instantiate(hitParticle, hitInfo.point, Quaternion.LookRotation(hitInfo.normal)) as GameObject;
             }
 
             vertexList.Add(hitInfo.point);
