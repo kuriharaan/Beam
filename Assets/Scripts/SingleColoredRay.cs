@@ -1,21 +1,39 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class SingleColoredRay : MonoBehaviour
 {
+    [System.Serializable]
+    public struct PopObject
+    {
+        public string tag;
+        public GameObject popObject;
+    }
+
     [SerializeField]
     Material material;
 
     [SerializeField]
     GameObject hitParticle;
 
+    [SerializeField]
+    HitObject[] popObjects;
+
     Mesh       mesh;
     MeshFilter meshFilter;
 
     List<Vector3> vertexList = new List<Vector3>();
 
-    GameObject particle;
+    struct HitObject
+    {
+        public int hitIndex;
+        public GameObject hitObject;
+        public GameObject popObject;
+    };
+
+    List<HitObject> hitObjects = new List<HitObject>();
 
     // Use this for initialization
     void Start()
@@ -49,9 +67,19 @@ public class SingleColoredRay : MonoBehaviour
                 break;
             }
 
-            if ( (null == particle) && ( null != hitParticle ) )
+            int index = hitObjects.FindIndex(x => x.hitObject == hitInfo.collider.gameObject);
+            if( 0 <= index )
             {
-                particle = Instantiate(hitParticle, hitInfo.point, Quaternion.LookRotation(hitInfo.normal)) as GameObject;
+                hitObjects[index].popObject.transform.position = hitInfo.point;
+                hitObjects[index].popObject.transform.rotation = Quaternion.LookRotation(hitInfo.normal);
+            }
+            else
+            {
+                HitObject hitObject = new HitObject();
+                hitObject.popObject = Instantiate(hitParticle, hitInfo.point, Quaternion.LookRotation(hitInfo.normal)) as GameObject;
+                hitObject.hitObject = hitInfo.collider.gameObject;
+
+                hitObjects.Add(hitObject);
             }
 
             vertexList.Add(hitInfo.point);
