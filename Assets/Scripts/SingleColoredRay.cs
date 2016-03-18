@@ -25,6 +25,10 @@ public class SingleColoredRay : MonoBehaviour
     MeshFilter meshFilter;
 
     List<Vector3> vertexList = new List<Vector3>();
+    List<Vector3> normalList = new List<Vector3>();
+
+    List<GameObject> hitInfomations = new List<GameObject>();
+    List<GameObject> popedObjects = new List<GameObject>();
 
     struct HitObject
     {
@@ -33,7 +37,7 @@ public class SingleColoredRay : MonoBehaviour
         public GameObject popObject;
     };
 
-    List<HitObject> hitObjects = new List<HitObject>();
+    //List<HitObject> hitObjects = new List<HitObject>();
 
     // Use this for initialization
     void Start()
@@ -56,9 +60,12 @@ public class SingleColoredRay : MonoBehaviour
     void Update()
     {
         vertexList.Clear();
+        normalList.Clear();
 
         Vector3 castPosition = transform.position;
         Vector3 forward = transform.forward;
+        int diffTopIndex = int.MaxValue;
+
         for (int i = 0; i < 100; ++i  )
         {
             RaycastHit hitInfo;
@@ -67,6 +74,18 @@ public class SingleColoredRay : MonoBehaviour
                 break;
             }
 
+            if( hitInfomations.Count <= i )
+            {
+                diffTopIndex = Mathf.Min(diffTopIndex, i);
+                hitInfomations.Add(hitInfo.collider.gameObject);
+            }
+            else if( hitInfomations[i] != hitInfo.collider.gameObject )
+            {
+                diffTopIndex = Mathf.Min(diffTopIndex, i);
+                hitInfomations[i] = hitInfo.collider.gameObject;
+            }
+
+            /*
             int index = hitObjects.FindIndex(x => x.hitObject == hitInfo.collider.gameObject);
             if( 0 <= index )
             {
@@ -81,16 +100,52 @@ public class SingleColoredRay : MonoBehaviour
 
                 hitObjects.Add(hitObject);
             }
+             */
 
             vertexList.Add(hitInfo.point);
+            normalList.Add(hitInfo.normal);
 
             castPosition = hitInfo.point;
             forward = Vector3.Reflect(forward, hitInfo.normal);
         }
 
+        hitInfomations.RemoveRange(vertexList.Count, hitInfomations.Count - vertexList.Count);
+
         vertexList.Add(forward * 100.0f + castPosition);
 
         UpdateColor();
+
+        for (int i = 0; i < hitInfomations.Count; ++i )
+        {
+            if (diffTopIndex <= i)
+            {
+                if ((popedObjects.Count > i) && (null != popedObjects))
+                {
+                    Destroy(popedObjects[i]);
+                    popedObjects[i] = Instantiate(hitParticle, vertexList[i], Quaternion.LookRotation(normalList[i])) as GameObject;
+                }
+                else
+                {
+                    popedObjects.Add(Instantiate(hitParticle, vertexList[i], Quaternion.LookRotation(normalList[i])) as GameObject);
+                }
+            }
+            else
+            {
+                popedObjects[i].transform.position = vertexList[i];
+                popedObjects[i].transform.rotation = Quaternion.LookRotation(normalList[i]);
+            }
+        }
+
+        for( int i = popedObjects.Count - 1; i >= 0; --i )
+        {
+            if( hitInfomations.Count > i )
+            {
+                break;
+            }
+
+            Destroy(popedObjects[i]);
+            popedObjects.RemoveAt(i);
+        }
     }
 
     void UpdateColor()
