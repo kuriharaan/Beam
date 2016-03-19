@@ -18,9 +18,6 @@ public class SingleColoredRay : MonoBehaviour
     [SerializeField]
     GameObject hitParticle;
 
-    [SerializeField]
-    HitObject[] popObjects;
-
     Mesh       mesh;
     MeshFilter meshFilter;
 
@@ -29,15 +26,6 @@ public class SingleColoredRay : MonoBehaviour
 
     List<GameObject> hitInfomations = new List<GameObject>();
     List<GameObject> popedObjects = new List<GameObject>();
-
-    struct HitObject
-    {
-        public int hitIndex;
-        public GameObject hitObject;
-        public GameObject popObject;
-    };
-
-    //List<HitObject> hitObjects = new List<HitObject>();
 
     // Use this for initialization
     void Start()
@@ -85,23 +73,6 @@ public class SingleColoredRay : MonoBehaviour
                 hitInfomations[i] = hitInfo.collider.gameObject;
             }
 
-            /*
-            int index = hitObjects.FindIndex(x => x.hitObject == hitInfo.collider.gameObject);
-            if( 0 <= index )
-            {
-                hitObjects[index].popObject.transform.position = hitInfo.point;
-                hitObjects[index].popObject.transform.rotation = Quaternion.LookRotation(hitInfo.normal);
-            }
-            else
-            {
-                HitObject hitObject = new HitObject();
-                hitObject.popObject = Instantiate(hitParticle, hitInfo.point, Quaternion.LookRotation(hitInfo.normal)) as GameObject;
-                hitObject.hitObject = hitInfo.collider.gameObject;
-
-                hitObjects.Add(hitObject);
-            }
-             */
-
             vertexList.Add(hitInfo.point);
             normalList.Add(hitInfo.normal);
 
@@ -114,8 +85,12 @@ public class SingleColoredRay : MonoBehaviour
         vertexList.Add(forward * 100.0f + castPosition);
 
         UpdateColor();
+        UpdatePopObjects(diffTopIndex);
+    }
 
-        for (int i = 0; i < hitInfomations.Count; ++i )
+    void UpdatePopObjects(int diffTopIndex)
+    {
+        for (int i = 0; i < hitInfomations.Count; ++i)
         {
             if (diffTopIndex <= i)
             {
@@ -136,9 +111,9 @@ public class SingleColoredRay : MonoBehaviour
             }
         }
 
-        for( int i = popedObjects.Count - 1; i >= 0; --i )
+        for (int i = popedObjects.Count - 1; i >= 0; --i)
         {
-            if( hitInfomations.Count > i )
+            if (hitInfomations.Count > i)
             {
                 break;
             }
