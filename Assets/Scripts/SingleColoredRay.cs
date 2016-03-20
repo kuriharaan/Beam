@@ -16,7 +16,7 @@ public class SingleColoredRay : MonoBehaviour
     Material material;
 
     [SerializeField]
-    GameObject hitParticle;
+    PopObject[] popObjects;
 
     Mesh       mesh;
     MeshFilter meshFilter;
@@ -26,6 +26,8 @@ public class SingleColoredRay : MonoBehaviour
 
     List<GameObject> hitInfomations = new List<GameObject>();
     List<GameObject> popedObjects = new List<GameObject>();
+
+    GameObject defaultPopObject = null;
 
     // Use this for initialization
     void Start()
@@ -43,6 +45,8 @@ public class SingleColoredRay : MonoBehaviour
 
         mesh      = new Mesh();
         mesh.name = "Ray";
+
+        SetupDefaultPopObject();
     }
 
     void Update()
@@ -88,20 +92,47 @@ public class SingleColoredRay : MonoBehaviour
         UpdatePopObjects(diffTopIndex);
     }
 
+    void SetupDefaultPopObject()
+    {
+        foreach (var p in popObjects)
+        {
+            if (string.IsNullOrEmpty(p.tag) )
+            {
+                defaultPopObject = p.popObject;
+                break;
+            }
+        }
+    }
+
+    GameObject FindPopObject(string tag)
+    {
+        foreach (var p in popObjects)
+        {
+            if (p.tag == tag)
+            {
+                return p.popObject;
+            }
+        }
+
+        return defaultPopObject;
+    }
+
     void UpdatePopObjects(int diffTopIndex)
     {
         for (int i = 0; i < hitInfomations.Count; ++i)
         {
             if (diffTopIndex <= i)
             {
+                GameObject popObject = FindPopObject(hitInfomations[i].gameObject.tag);
+
                 if ((popedObjects.Count > i) && (null != popedObjects))
                 {
                     Destroy(popedObjects[i]);
-                    popedObjects[i] = Instantiate(hitParticle, vertexList[i], Quaternion.LookRotation(normalList[i])) as GameObject;
+                    popedObjects[i] = Instantiate(popObject, vertexList[i], Quaternion.LookRotation(normalList[i])) as GameObject;
                 }
                 else
                 {
-                    popedObjects.Add(Instantiate(hitParticle, vertexList[i], Quaternion.LookRotation(normalList[i])) as GameObject);
+                    popedObjects.Add(Instantiate(popObject, vertexList[i], Quaternion.LookRotation(normalList[i])) as GameObject);
                 }
             }
             else
