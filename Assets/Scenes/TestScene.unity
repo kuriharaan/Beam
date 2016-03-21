@@ -197,10 +197,10 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 22caccc91ecb3b8499a6a7c49b8667d2, type: 2}
   popObjects:
   - tag: 
-    popObject: {fileID: 1000012247543978, guid: f64dac290ddf05249bd7fcc3a2ab7366,
+    gameObject: {fileID: 1000012247543978, guid: f64dac290ddf05249bd7fcc3a2ab7366,
       type: 2}
   - tag: cube
-    popObject: {fileID: 1000012204154208, guid: 54e549f333230f84b87c69a0b002b377,
+    gameObject: {fileID: 1000012204154208, guid: 54e549f333230f84b87c69a0b002b377,
       type: 2}
 --- !u!4 &136274816
 Transform:

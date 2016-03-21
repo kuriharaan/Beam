@@ -9,7 +9,7 @@ public class SingleColoredRay : MonoBehaviour
     public struct PopObject
     {
         public string tag;
-        public GameObject popObject;
+        public GameObject gameObject;
     }
 
     [SerializeField]
@@ -98,7 +98,7 @@ public class SingleColoredRay : MonoBehaviour
         {
             if (string.IsNullOrEmpty(p.tag) )
             {
-                defaultPopObject = p.popObject;
+                defaultPopObject = p.gameObject;
                 break;
             }
         }
@@ -110,7 +110,7 @@ public class SingleColoredRay : MonoBehaviour
         {
             if (p.tag == tag)
             {
-                return p.popObject;
+                return p.gameObject;
             }
         }
 
