@@ -80,6 +80,12 @@ public class SingleColoredRay : MonoBehaviour
             vertexList.Add(hitInfo.point);
             normalList.Add(hitInfo.normal);
 
+            var hitHandler = hitInfo.collider.gameObject.GetComponent<ILazerHitEvent>();
+            if( null != hitHandler )
+            {
+                hitHandler.OnLazerHit(hitInfo);
+            }
+
             castPosition = hitInfo.point;
             forward = Vector3.Reflect(forward, hitInfo.normal);
         }
