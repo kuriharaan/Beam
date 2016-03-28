@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+[ExecuteInEditMode]
 public class SingleColoredRay : MonoBehaviour
 {
     [System.Serializable]
@@ -81,11 +82,15 @@ public class SingleColoredRay : MonoBehaviour
             vertexList.Add(hitInfo.point);
             normalList.Add(hitInfo.normal);
 
-            ExecuteEvents.Execute<ILazerHitEvent>(
-                hitInfo.collider.gameObject,
-                null,
-                (recieveTarget, y) => recieveTarget.OnLazerHit(hitInfo)
-            );
+
+            if (Application.isPlaying)
+            {
+                ExecuteEvents.Execute<ILazerHitEvent>(
+                    hitInfo.collider.gameObject,
+                    null,
+                    (recieveTarget, y) => recieveTarget.OnLazerHit(hitInfo)
+                );
+            }
 
             castPosition = hitInfo.point;
             forward = Vector3.Reflect(forward, hitInfo.normal);
@@ -96,7 +101,11 @@ public class SingleColoredRay : MonoBehaviour
         vertexList.Add(forward * 100.0f + castPosition);
 
         UpdateColor();
-        UpdatePopObjects(diffTopIndex);
+
+        if( Application.isPlaying )
+        {
+            UpdatePopObjects(diffTopIndex);
+        }
     }
 
     void SetupDefaultPopObject()
