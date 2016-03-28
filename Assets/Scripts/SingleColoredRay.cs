@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,11 +81,11 @@ public class SingleColoredRay : MonoBehaviour
             vertexList.Add(hitInfo.point);
             normalList.Add(hitInfo.normal);
 
-            var hitHandler = hitInfo.collider.gameObject.GetComponent<ILazerHitEvent>();
-            if( null != hitHandler )
-            {
-                hitHandler.OnLazerHit(hitInfo);
-            }
+            ExecuteEvents.Execute<ILazerHitEvent>(
+                hitInfo.collider.gameObject,
+                null,
+                (recieveTarget, y) => recieveTarget.OnLazerHit(hitInfo)
+            );
 
             castPosition = hitInfo.point;
             forward = Vector3.Reflect(forward, hitInfo.normal);
