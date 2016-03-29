@@ -34,25 +34,37 @@ public class SingleColoredRay : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        var meshRenderer = gameObject.AddComponent<MeshRenderer>();
-        if( null != meshRenderer )
-        {
-            meshRenderer.material = material;
-        }
-        meshFilter = gameObject.AddComponent<MeshFilter>();
-        if( null == meshFilter )
-        {
-            return;
-        }
-
-        mesh      = new Mesh();
-        mesh.name = "Ray";
+        CreateMesh();
 
         SetupDefaultPopObject();
     }
 
+    void CreateMesh()
+    {
+        var meshRenderer = gameObject.GetComponent<MeshRenderer>();
+        if( null == meshRenderer )
+        {
+            meshRenderer = gameObject.AddComponent<MeshRenderer>();
+        }
+        meshRenderer.material = material;
+
+        meshFilter = gameObject.GetComponent<MeshFilter>();
+        if( null == meshFilter )
+        {
+            meshFilter = gameObject.AddComponent<MeshFilter>();
+        }
+
+        if( null == mesh )
+        {
+            mesh = new Mesh();
+            mesh.name = "Ray";
+        }
+    }
+
     void Update()
     {
+        CreateMesh();
+
         vertexList.Clear();
         normalList.Clear();
 
