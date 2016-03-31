@@ -40,6 +40,9 @@ public class SingleColoredRayEditor : Editor
             EditorGUILayout.EndHorizontal();
         }
 
+        EditorGUI.indentLevel = 0;
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("reflectionMax"));
+
         serializedObject.ApplyModifiedProperties();
     }
 }

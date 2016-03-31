@@ -18,6 +18,9 @@ public class SingleColoredRay : MonoBehaviour
     Material material;
 
     [SerializeField]
+    public int reflectionMax = 0;
+
+    [SerializeField]
     PopObject[] popObjects;
 
     Mesh       mesh;
@@ -72,8 +75,15 @@ public class SingleColoredRay : MonoBehaviour
         Vector3 forward = transform.forward;
         int diffTopIndex = int.MaxValue;
 
-        for (int i = 0; i < 100; ++i  )
+        bool stopOnReflect = false;
+        for (int i = 0; ; ++i  )
         {
+            if( ( 0 <= reflectionMax ) && ( reflectionMax < i) )
+            {
+                stopOnReflect = true;
+                break;
+            }
+
             RaycastHit hitInfo;
             if (!Physics.Raycast(castPosition, forward, out hitInfo))
             {
@@ -110,7 +120,10 @@ public class SingleColoredRay : MonoBehaviour
 
         hitInfomations.RemoveRange(vertexList.Count, hitInfomations.Count - vertexList.Count);
 
-        vertexList.Add(forward * 100.0f + castPosition);
+        if (!stopOnReflect )
+        {
+            vertexList.Add(forward * 100.0f + castPosition);
+        }
 
         UpdateColor();
 
