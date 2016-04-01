@@ -5,12 +5,10 @@ using UnityEditor;
 [CustomEditor(typeof(SingleColoredRay))]
 public class SingleColoredRayEditor : Editor
 {
-    SerializedProperty popObjects;
     SerializedProperty popObjectsSize;
 
     void OnEnable()
     {
-        popObjects     = serializedObject.FindProperty("popObjects");
         popObjectsSize = serializedObject.FindProperty("popObjects.Array.size");
     }
 
@@ -41,6 +39,7 @@ public class SingleColoredRayEditor : Editor
         }
 
         EditorGUI.indentLevel = 0;
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("enableReflectionMax"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("reflectionMax"));
 
         serializedObject.ApplyModifiedProperties();

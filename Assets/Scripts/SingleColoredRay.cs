@@ -21,6 +21,9 @@ public class SingleColoredRay : MonoBehaviour
     public int reflectionMax = 0;
 
     [SerializeField]
+    public bool enableReflectionMax = false;
+
+    [SerializeField]
     PopObject[] popObjects;
 
     Mesh       mesh;
@@ -78,7 +81,7 @@ public class SingleColoredRay : MonoBehaviour
         bool stopOnReflect = false;
         for (int i = 0; ; ++i  )
         {
-            if( ( 0 <= reflectionMax ) && ( reflectionMax < i) )
+            if (enableReflectionMax && (0 <= reflectionMax) && (reflectionMax < i))
             {
                 stopOnReflect = true;
                 break;
