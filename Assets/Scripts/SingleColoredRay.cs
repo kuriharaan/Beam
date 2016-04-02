@@ -24,6 +24,9 @@ public class SingleColoredRay : MonoBehaviour
     public bool enableReflectionMax = false;
 
     [SerializeField]
+    public float lengthMax = 10000.0f;
+
+    [SerializeField]
     PopObject[] popObjects;
 
     Mesh       mesh;
@@ -37,7 +40,6 @@ public class SingleColoredRay : MonoBehaviour
 
     GameObject defaultPopObject = null;
 
-    // Use this for initialization
     void Start()
     {
         CreateMesh();
@@ -78,6 +80,8 @@ public class SingleColoredRay : MonoBehaviour
         Vector3 forward = transform.forward;
         int diffTopIndex = int.MaxValue;
 
+        float distance = Mathf.Max(0.0f, lengthMax);
+
         bool stopOnReflect = false;
         for (int i = 0; ; ++i  )
         {
@@ -88,10 +92,12 @@ public class SingleColoredRay : MonoBehaviour
             }
 
             RaycastHit hitInfo;
-            if (!Physics.Raycast(castPosition, forward, out hitInfo))
+            if (!Physics.Raycast(castPosition, forward, out hitInfo, distance))
             {
                 break;
             }
+
+            distance = Mathf.Max(0.0f, distance - (castPosition - hitInfo.point).magnitude);
 
             if( hitInfomations.Count <= i )
             {
@@ -125,7 +131,7 @@ public class SingleColoredRay : MonoBehaviour
 
         if (!stopOnReflect )
         {
-            vertexList.Add(forward * 100.0f + castPosition);
+            vertexList.Add(forward * distance + castPosition);
         }
 
         UpdateColor();

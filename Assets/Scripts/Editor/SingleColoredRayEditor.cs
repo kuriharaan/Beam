@@ -39,8 +39,12 @@ public class SingleColoredRayEditor : Editor
         }
 
         EditorGUI.indentLevel = 0;
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("enableReflectionMax"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("reflectionMax"));
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("enableReflectionMax"), new GUIContent("Reflection limitation"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("reflectionMax"), GUIContent.none);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("lengthMax"), new GUIContent("length"));
 
         serializedObject.ApplyModifiedProperties();
     }
