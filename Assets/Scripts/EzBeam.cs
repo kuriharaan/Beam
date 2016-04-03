@@ -172,21 +172,23 @@ public class EzBeam : MonoBehaviour
     {
         for (int i = 0; i < hitInfomations.Count; ++i)
         {
+            GameObject popObject = FindPopObject(hitInfomations[i].gameObject.tag);
+            if( null == popObject )
+            {
+                continue;
+            }
+
             if (diffTopIndex <= i)
             {
-                GameObject popObject = FindPopObject(hitInfomations[i].gameObject.tag);
 
-                if( null != popObject )
+                if ((popedObjects.Count > i) && (null != popedObjects))
                 {
-                    if ((popedObjects.Count > i) && (null != popedObjects))
-                    {
-                        Destroy(popedObjects[i]);
-                        popedObjects[i] = Instantiate(popObject, vertexList[i], Quaternion.LookRotation(normalList[i])) as GameObject;
-                    }
-                    else
-                    {
-                        popedObjects.Add(Instantiate(popObject, vertexList[i], Quaternion.LookRotation(normalList[i])) as GameObject);
-                    }
+                    Destroy(popedObjects[i]);
+                    popedObjects[i] = Instantiate(popObject, vertexList[i], Quaternion.LookRotation(normalList[i])) as GameObject;
+                }
+                else
+                {
+                    popedObjects.Add(Instantiate(popObject, vertexList[i], Quaternion.LookRotation(normalList[i])) as GameObject);
                 }
             }
             else
