@@ -55,16 +55,16 @@ public class EzBeamRenderer : MonoBehaviour
 
     void UpdateColor()
     {
-        Vector3[] vertices = new Vector3[beam.vertexList.Count + 1];
+        Vector3[] vertices = new Vector3[beam.PointList.Count + 1];
         vertices[0] = Vector3.zero;
 
-        for (int i = 0; i < beam.vertexList.Count; ++i)
+        for (int i = 0; i < beam.PointList.Count; ++i)
         {
-            vertices[i + 1] = transform.InverseTransformPoint(beam.vertexList[i]);
+            vertices[i + 1] = transform.InverseTransformPoint(beam.PointList[i].position);
         }
 
-        int[] triangles = new int[beam.vertexList.Count + 1];
-        for (int i = 0; i < beam.vertexList.Count + 1; ++i)
+        int[] triangles = new int[beam.PointList.Count + 1];
+        for (int i = 0; i < beam.PointList.Count + 1; ++i)
         {
             triangles[i] = i;
         }

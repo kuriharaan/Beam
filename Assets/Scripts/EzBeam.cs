@@ -14,8 +14,13 @@ public class EzBeam : MonoBehaviour
         public GameObject gameObject;
     }
 
-    //[SerializeField]
-    //Material material;
+    public List<Point> PointList
+    {
+        get
+        {
+            return pointList;
+        }
+    }
 
     [SerializeField]
     public int reflectionMax = 0;
@@ -29,11 +34,12 @@ public class EzBeam : MonoBehaviour
     [SerializeField]
     PopObject[] popObjects;
 
-    //Mesh       mesh;
-    //MeshFilter meshFilter;
-
-    public List<Vector3> vertexList = new List<Vector3>();
-    public List<Vector3> normalList = new List<Vector3>();
+    public struct Point
+    {
+        public Vector3 position;
+        public Vector3 normal;
+    };
+    List<Point> pointList = new List<Point>();
 
     List<GameObject> hitInfomations = new List<GameObject>();
     List<GameObject> popedObjects = new List<GameObject>();
@@ -42,40 +48,12 @@ public class EzBeam : MonoBehaviour
 
     void Start()
     {
-        //CreateMesh();
-
         SetupDefaultPopObject();
     }
 
-    /*
-    void CreateMesh()
-    {
-        var meshRenderer = gameObject.GetComponent<MeshRenderer>();
-        if( null == meshRenderer )
-        {
-            meshRenderer = gameObject.AddComponent<MeshRenderer>();
-        }
-
-        meshFilter = gameObject.GetComponent<MeshFilter>();
-        if( null == meshFilter )
-        {
-            meshFilter = gameObject.AddComponent<MeshFilter>();
-        }
-
-        if( null == mesh )
-        {
-            mesh = new Mesh();
-            mesh.name = "Ray";
-        }
-    }
-     */
-
     void Update()
     {
-        //CreateMesh();
-
-        vertexList.Clear();
-        normalList.Clear();
+        pointList.Clear();
 
         Vector3 castPosition = transform.position;
         Vector3 forward = transform.forward;
@@ -111,9 +89,10 @@ public class EzBeam : MonoBehaviour
                 hitInfomations[i] = hitInfo.collider.gameObject;
             }
 
-            vertexList.Add(hitInfo.point);
-            normalList.Add(hitInfo.normal);
-
+            Point point;
+            point.position = hitInfo.point;
+            point.normal   = hitInfo.normal;
+            pointList.Add(point);
 
             if (Application.isPlaying)
             {
@@ -128,14 +107,15 @@ public class EzBeam : MonoBehaviour
             forward = Vector3.Reflect(forward, hitInfo.normal);
         }
 
-        hitInfomations.RemoveRange(vertexList.Count, hitInfomations.Count - vertexList.Count);
+        hitInfomations.RemoveRange(pointList.Count, hitInfomations.Count - pointList.Count);
 
         if (!stopOnReflect )
         {
-            vertexList.Add(forward * distance + castPosition);
+            Point point;
+            point.position = forward * distance + castPosition;
+            point.normal   = -point.position;
+            pointList.Add(point);
         }
-
-        //UpdateColor();
 
         if( Application.isPlaying )
         {
@@ -178,23 +158,23 @@ public class EzBeam : MonoBehaviour
                 continue;
             }
 
+            var point = pointList[i];
             if (diffTopIndex <= i)
             {
-
                 if ((popedObjects.Count > i) && (null != popedObjects))
                 {
                     Destroy(popedObjects[i]);
-                    popedObjects[i] = Instantiate(popObject, vertexList[i], Quaternion.LookRotation(normalList[i])) as GameObject;
+                    popedObjects[i] = Instantiate(popObject, point.position, Quaternion.LookRotation(point.normal)) as GameObject;
                 }
                 else
                 {
-                    popedObjects.Add(Instantiate(popObject, vertexList[i], Quaternion.LookRotation(normalList[i])) as GameObject);
+                    popedObjects.Add(Instantiate(popObject, point.position, Quaternion.LookRotation(point.normal)) as GameObject);
                 }
             }
             else
             {
-                popedObjects[i].transform.position = vertexList[i];
-                popedObjects[i].transform.rotation = Quaternion.LookRotation(normalList[i]);
+                popedObjects[i].transform.position = point.position;
+                popedObjects[i].transform.rotation = Quaternion.LookRotation(point.normal);
             }
         }
 
@@ -209,30 +189,4 @@ public class EzBeam : MonoBehaviour
             popedObjects.RemoveAt(i);
         }
     }
-
-    /*
-    void UpdateColor()
-    {
-        Vector3[] vertices = new Vector3[vertexList.Count + 1];
-        vertices[0] = Vector3.zero;
-
-        for (int i = 0; i < vertexList.Count; ++i)
-        {
-            vertices[i + 1] = transform.InverseTransformPoint(vertexList[i]);
-        }
-
-        int[] triangles = new int[vertexList.Count + 1];
-        for (int i = 0; i < vertexList.Count + 1; ++i)
-        {
-            triangles[i] = i;
-        }
-
-        mesh.Clear();
-        mesh.vertices = vertices;
-        mesh.SetIndices(triangles, MeshTopology.LineStrip, 0);
-        mesh.RecalculateBounds();
-
-        meshFilter.mesh = mesh;
-    }
-     */
 }
