@@ -96,10 +96,10 @@ public class EzBeam : MonoBehaviour
 
             if (Application.isPlaying)
             {
-                ExecuteEvents.Execute<ILazerHitEvent>(
+                ExecuteEvents.Execute<IBeamHitEvent>(
                     hitInfo.collider.gameObject,
                     null,
-                    (recieveTarget, y) => recieveTarget.OnLazerHit(hitInfo)
+                    (recieveTarget, y) => recieveTarget.OnBeamHit(hitInfo)
                 );
             }
 
