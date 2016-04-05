@@ -45,6 +45,7 @@ public class EzBeamEditor : Editor
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("lengthMax"), new GUIContent("length"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("force"), new GUIContent("force"));
 
         serializedObject.ApplyModifiedProperties();
     }

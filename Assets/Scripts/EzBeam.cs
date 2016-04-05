@@ -34,6 +34,8 @@ public class EzBeam : MonoBehaviour
     [SerializeField]
     PopObject[] popObjects;
 
+    public float force;
+
     public struct Point
     {
         public Vector3 position;
@@ -100,6 +102,7 @@ public class EzBeam : MonoBehaviour
                 info.position  = hitInfo.point;
                 info.normal    = hitInfo.normal;
                 info.incidence = forward;
+                info.beam      = this;
 
                 ExecuteEvents.Execute<IBeamHitEvent>(
                     hitInfo.collider.gameObject,

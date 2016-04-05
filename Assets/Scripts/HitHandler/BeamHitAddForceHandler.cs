@@ -18,6 +18,6 @@ public class BeamHitAddForceHandler : MonoBehaviour, IBeamHitEvent
 
     public void OnBeamHit(BeamHitInfo hitInfo)
     {
-        rigidBody.AddForceAtPosition(hitInfo.incidence * force, hitInfo.position);
+        rigidBody.AddForceAtPosition(hitInfo.incidence * hitInfo.beam.force, hitInfo.position);
     }
 }

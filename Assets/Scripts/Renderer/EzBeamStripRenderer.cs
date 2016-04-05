@@ -2,7 +2,7 @@
 using System.Collections;
 
 [ExecuteInEditMode]
-public class EzBeamRenderer : MonoBehaviour
+public class EzBeamStripRenderer : MonoBehaviour
 {
     [SerializeField]
     Material material;
@@ -50,10 +50,10 @@ public class EzBeamRenderer : MonoBehaviour
     void LateUpdate ()
     {
         CreateMesh();
-        UpdateColor();
+        UpdateLineStrip();
     }
 
-    void UpdateColor()
+    void UpdateLineStrip()
     {
         Vector3[] vertices = new Vector3[beam.PointList.Count + 1];
         vertices[0] = Vector3.zero;

@@ -207,6 +207,7 @@ MonoBehaviour:
   - tag: cube
     gameObject: {fileID: 1000012247543978, guid: f64dac290ddf05249bd7fcc3a2ab7366,
       type: 2}
+  force: 10
 --- !u!4 &136274816
 Transform:
   m_ObjectHideFlags: 0
@@ -226,7 +227,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 136274814}
-  m_Mesh: {fileID: 1050561039}
+  m_Mesh: {fileID: 606001825}
 --- !u!23 &136274818
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -494,7 +495,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46e4a4dfbaa19604bba33e31a41eb564, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!43 &1050561039
+--- !u!43 &606001825
 Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -794,16 +795,16 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: -0.87, y: 0.25, z: -3.87}
-  - {x: 0.1504991, y: 0.25, z: -0.5732999}
+  - {x: 0.1932379, y: 0.25, z: -0.43523288}
   m_Parameters:
     startWidth: 0.01
     endWidth: 0.01
     m_StartColor:
       serializedVersion: 2
-      rgba: 4294967295
+      rgba: 11250687
     m_EndColor:
       serializedVersion: 2
-      rgba: 4294967295
+      rgba: 4279703551
   m_UseWorldSpace: 1
 --- !u!114 &1253073605
 MonoBehaviour:
@@ -838,6 +839,7 @@ MonoBehaviour:
   - tag: cube
     gameObject: {fileID: 1000012247543978, guid: f64dac290ddf05249bd7fcc3a2ab7366,
       type: 2}
+  force: 0
 --- !u!4 &1253073607
 Transform:
   m_ObjectHideFlags: 0
