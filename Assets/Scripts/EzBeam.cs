@@ -96,10 +96,15 @@ public class EzBeam : MonoBehaviour
 
             if (Application.isPlaying)
             {
+                BeamHitInfo info;
+                info.position  = hitInfo.point;
+                info.normal    = hitInfo.normal;
+                info.incidence = forward;
+
                 ExecuteEvents.Execute<IBeamHitEvent>(
                     hitInfo.collider.gameObject,
                     null,
-                    (recieveTarget, y) => recieveTarget.OnBeamHit(hitInfo)
+                    (recieveTarget, y) => recieveTarget.OnBeamHit(info)
                 );
             }
 

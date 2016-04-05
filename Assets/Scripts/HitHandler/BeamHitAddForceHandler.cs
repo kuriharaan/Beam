@@ -3,6 +3,8 @@ using System.Collections;
 
 public class BeamHitAddForceHandler : MonoBehaviour, IBeamHitEvent
 {
+    public float force = 1.0f;
+
     Rigidbody rigidBody;
 
     void Start()
@@ -14,9 +16,8 @@ public class BeamHitAddForceHandler : MonoBehaviour, IBeamHitEvent
         }
     }
 
-    public void OnBeamHit(RaycastHit hitInfo)
+    public void OnBeamHit(BeamHitInfo hitInfo)
     {
-        //gameObject.transform.position += hitInfo.normal * -0.1f;
-        rigidBody.AddForce(Vector3.one * 1.0f);
+        rigidBody.AddForceAtPosition(hitInfo.incidence * force, hitInfo.position);
     }
 }
