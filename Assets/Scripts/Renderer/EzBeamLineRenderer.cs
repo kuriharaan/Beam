@@ -4,9 +4,6 @@ using System.Collections;
 [ExecuteInEditMode]
 public class EzBeamLineRenderer : MonoBehaviour
 {
-    [SerializeField]
-    Material material;
-
     EzBeam beam;
     LineRenderer lineRenderer;
 
@@ -34,14 +31,11 @@ public class EzBeamLineRenderer : MonoBehaviour
 
     void UpdateColor()
     {
-        Vector3[] vertices = new Vector3[beam.PointList.Count + 1];
-        vertices[0] = transform.position;
-
-        for (int i = 0; i < beam.PointList.Count; ++i)
+        lineRenderer.SetVertexCount(beam.PointList.Count + 1);
+        lineRenderer.SetPosition(0, transform.position);
+        for( int i = 0; i < beam.PointList.Count; ++i )
         {
-            vertices[i + 1] = beam.PointList[i].position;
+            lineRenderer.SetPosition(i + 1, beam.PointList[i].position);
         }
-
-        lineRenderer.SetPositions(vertices);
     }
 }
