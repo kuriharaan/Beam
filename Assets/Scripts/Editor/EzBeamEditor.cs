@@ -5,6 +5,14 @@ using UnityEditor;
 [CustomEditor(typeof(EzBeam))]
 public class EzBeamEditor : Editor
 {
+
+    [MenuItem("GameObject/3D Object/EzBeamLineRenderer")]
+    static void CreateObjectEzBeamLineRenderer()
+    {
+        PrefabUtility.InstantiatePrefab(AssetDatabase.LoadMainAssetAtPath("Assets/Prefabs/EzBeamLineRendererPrefab.prefab"));
+    }
+
+
     SerializedProperty popObjectsSize;
 
     void OnEnable()
