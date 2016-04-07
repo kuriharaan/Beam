@@ -20,6 +20,11 @@ public class EzBeamEditor : Editor
         popObjectsSize = serializedObject.FindProperty("popObjects.Array.size");
     }
 
+    [MenuItem("GameObject/3D Object/EzBeamLineRenderer")]
+    static void CreateObjectEzBeamLineRenderer()
+    {
+        PrefabUtility.InstantiatePrefab(AssetDatabase.LoadMainAssetAtPath("Assets/RayEmitterPrefab.prefab"));
+    }
 
     public override void OnInspectorGUI()
     {
