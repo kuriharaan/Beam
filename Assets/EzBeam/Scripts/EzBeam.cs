@@ -32,7 +32,7 @@ public class EzBeam : MonoBehaviour
     public float lengthMax = 10000.0f;
 
     [SerializeField]
-    PopObject[] popObjects;
+    PopObject[] popObjects = new PopObject[] {};
 
     public float force;
 
@@ -48,12 +48,17 @@ public class EzBeam : MonoBehaviour
 
     GameObject defaultPopObject = null;
 
+    void LateUpdate()
+    {
+        UpdateHitInformation();
+    }
+
     void Start()
     {
         SetupDefaultPopObject();
     }
 
-    void Update()
+    void UpdateHitInformation()
     {
         pointList.Clear();
 
@@ -129,6 +134,13 @@ public class EzBeam : MonoBehaviour
         {
             UpdatePopObjects(diffTopIndex);
         }
+
+
+        ExecuteEvents.Execute<IEzBeamRenderer>(
+            gameObject,
+            null,
+            (recieveTarget, y) => recieveTarget.OnUpdate()
+        );
     }
 
     void SetupDefaultPopObject()

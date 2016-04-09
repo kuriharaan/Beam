@@ -2,35 +2,52 @@
 using System.Collections;
 
 [ExecuteInEditMode]
-public class EzBeamLineRenderer : MonoBehaviour
+public class EzBeamLineRenderer : MonoBehaviour, IEzBeamRenderer
 {
     EzBeam beam;
     LineRenderer lineRenderer;
+
+    public void OnUpdate()
+    {
+        UpdateColor();
+    }
 
     void Start ()
     {
         beam = GetComponent<EzBeam>();
         if( null == beam )
         {
-            Destroy(this);
+            if (Application.isPlaying)
+            {
+                Destroy(this);
+            }
+            else
+            {
+                DestroyImmediate(this);
+            }
             return;
         }
 
         lineRenderer = GetComponent<LineRenderer>();
-        if( null == lineRenderer )
-        {
-            Destroy(this);
-            return;
-        }
     }
 
     void LateUpdate ()
+    {
+        //UpdateColor();
+    }
+
+    void OnPreRender()
     {
         UpdateColor();
     }
 
     void UpdateColor()
     {
+        if( null == lineRenderer )
+        {
+            return;
+        }
+
         lineRenderer.SetVertexCount(beam.PointList.Count + 1);
         lineRenderer.SetPosition(0, transform.position);
         for( int i = 0; i < beam.PointList.Count; ++i )

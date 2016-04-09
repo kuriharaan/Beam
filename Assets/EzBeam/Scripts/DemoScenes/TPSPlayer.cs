@@ -13,10 +13,18 @@ public class TPSPlayer : MonoBehaviour
     // Update is called once per frame
     void Update ()
     {
+
+        /*
+        var rot = transform.rotation;
+        rot.y = Mathf.Sin(Time.time) * Mathf.PI * 0.25f;
+        transform.rotation = rot;
+        */
+
         float horizontal = Input.GetAxis("Horizontal");
         if( Mathf.Abs(horizontal) > 0.1f )
         {
             transform.Rotate(new Vector3(0.0f, horizontal, 0.0f));
+
         }
 
         float vertical = Input.GetAxis("Vertical") * 0.5f;
