@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - cube
+  - wood
+  - metal
   layers:
   - Default
   - TransparentFX
