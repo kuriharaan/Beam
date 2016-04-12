@@ -9,7 +9,26 @@ public class EzBeamEditor : Editor
     [MenuItem("GameObject/3D Object/EzBeamLineRenderer")]
     static void CreateObjectEzBeamLineRenderer()
     {
-        PrefabUtility.InstantiatePrefab(AssetDatabase.LoadMainAssetAtPath("Assets/EzBeam/Prefabs/EzBeamLineRendererPrefab.prefab"));
+        var obj = PrefabUtility.InstantiatePrefab(AssetDatabase.LoadMainAssetAtPath("Assets/EzBeam/Prefabs/EzBeamLineRendererPrefab.prefab")) as GameObject;
+
+        GameObject go = Selection.activeObject as GameObject;
+        if( null != go )
+        {
+            var prefabType = PrefabUtility.GetPrefabType(go);
+            if(
+                ( PrefabType.None == prefabType) ||
+                ( PrefabType.DisconnectedModelPrefabInstance == prefabType) ||
+                ( PrefabType.DisconnectedPrefabInstance == prefabType) ||
+                ( PrefabType.MissingPrefabInstance == prefabType) ||
+                ( PrefabType.ModelPrefabInstance == prefabType) ||
+                ( PrefabType.PrefabInstance == prefabType)
+            )
+            {
+                obj.transform.SetParent(go.transform, false);
+            }
+        }
+
+        Selection.activeObject = obj;
     }
 
 
