@@ -183,7 +183,7 @@ public class EzBeam : MonoBehaviour
             {
                 if ((popedObjects.Count > i) && (null != popedObjects))
                 {
-                    Destroy(popedObjects[i]);
+                    DestroyPopedObject(popedObjects[i]);
                     popedObjects[i] = Instantiate(popObject, point.position, Quaternion.LookRotation(point.normal)) as GameObject;
                 }
                 else
@@ -205,8 +205,27 @@ public class EzBeam : MonoBehaviour
                 break;
             }
 
-            Destroy(popedObjects[i]);
+            DestroyPopedObject(popedObjects[i]);
             popedObjects.RemoveAt(i);
+        }
+    }
+
+    void DestroyPopedObject(GameObject obj)
+    {
+        var particle = obj.GetComponent<ParticleSystem>();
+        if( null == particle )
+        {
+            particle = obj.GetComponentInChildren<ParticleSystem>();
+        }
+
+        if( null != particle )
+        {
+            particle.Stop();
+            Destroy(obj, particle.duration);
+        }
+        else
+        {
+            Destroy(obj);
         }
     }
 }
