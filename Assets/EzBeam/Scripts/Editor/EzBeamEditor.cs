@@ -43,8 +43,12 @@ public class EzBeamEditor : Editor
     {
         serializedObject.Update();
 
+
         EditorGUI.indentLevel = 0;
-        EditorGUILayout.LabelField(new GUIContent("Pop objects on hit"));
+        EditorGUILayout.LabelField(new GUIContent("Pop object on hit."));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("defaultPopObjectPrefab"), new GUIContent("Default"));
+
+        EditorGUILayout.LabelField(new GUIContent("Optional objects with tag."));
 
         EditorGUI.indentLevel = 1;
         EditorGUILayout.PropertyField(popObjectsSize);

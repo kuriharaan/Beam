@@ -174,11 +174,6 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 1840229058}
     m_Modifications:
-    - target: {fileID: 114000010367420966, guid: a77756e44a1b19c46b9f11281013072c,
-        type: 2}
-      propertyPath: popObjects.Array.size
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 4000010277239720, guid: a77756e44a1b19c46b9f11281013072c, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -210,74 +205,6 @@ Prefab:
     - target: {fileID: 4000010277239720, guid: a77756e44a1b19c46b9f11281013072c, type: 2}
       propertyPath: m_RootOrder
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 120000013265412940, guid: a77756e44a1b19c46b9f11281013072c,
-        type: 2}
-      propertyPath: m_Positions.Array.data[0].x
-      value: 19.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 120000013265412940, guid: a77756e44a1b19c46b9f11281013072c,
-        type: 2}
-      propertyPath: m_Positions.Array.data[1].x
-      value: 19.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 120000013265412940, guid: a77756e44a1b19c46b9f11281013072c,
-        type: 2}
-      propertyPath: m_Positions.Array.data[0].z
-      value: 3.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 120000013265412940, guid: a77756e44a1b19c46b9f11281013072c,
-        type: 2}
-      propertyPath: m_Positions.Array.data[1].z
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 114000010367420966, guid: a77756e44a1b19c46b9f11281013072c,
-        type: 2}
-      propertyPath: popObjects.Array.data[0].gameObject
-      value: 
-      objectReference: {fileID: 1000012557285594, guid: 3feae2a36c6d4c54e92e228039824319,
-        type: 2}
-    - target: {fileID: 114000010367420966, guid: a77756e44a1b19c46b9f11281013072c,
-        type: 2}
-      propertyPath: popObjects.Array.data[0].tag
-      value: Untagged
-      objectReference: {fileID: 0}
-    - target: {fileID: 114000010367420966, guid: a77756e44a1b19c46b9f11281013072c,
-        type: 2}
-      propertyPath: popObjects.Array.data[1].tag
-      value: wood
-      objectReference: {fileID: 0}
-    - target: {fileID: 114000010367420966, guid: a77756e44a1b19c46b9f11281013072c,
-        type: 2}
-      propertyPath: popObjects.Array.data[1].gameObject
-      value: 
-      objectReference: {fileID: 1000012204154208, guid: 54e549f333230f84b87c69a0b002b377,
-        type: 2}
-    - target: {fileID: 114000010367420966, guid: a77756e44a1b19c46b9f11281013072c,
-        type: 2}
-      propertyPath: popObjects.Array.data[2].tag
-      value: metal
-      objectReference: {fileID: 0}
-    - target: {fileID: 114000010367420966, guid: a77756e44a1b19c46b9f11281013072c,
-        type: 2}
-      propertyPath: popObjects.Array.data[2].gameObject
-      value: 
-      objectReference: {fileID: 1000012247543978, guid: f64dac290ddf05249bd7fcc3a2ab7366,
-        type: 2}
-    - target: {fileID: 114000010367420966, guid: a77756e44a1b19c46b9f11281013072c,
-        type: 2}
-      propertyPath: force
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 120000013265412940, guid: a77756e44a1b19c46b9f11281013072c,
-        type: 2}
-      propertyPath: m_Positions.Array.data[0].y
-      value: 1.65
-      objectReference: {fileID: 0}
-    - target: {fileID: 120000013265412940, guid: a77756e44a1b19c46b9f11281013072c,
-        type: 2}
-      propertyPath: m_Positions.Array.data[1].y
-      value: 1.65
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a77756e44a1b19c46b9f11281013072c, type: 2}

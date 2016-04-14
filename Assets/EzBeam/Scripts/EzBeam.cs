@@ -32,6 +32,9 @@ public class EzBeam : MonoBehaviour
     public float lengthMax = 10000.0f;
 
     [SerializeField]
+    public GameObject defaultPopObjectPrefab;
+
+    [SerializeField]
     PopObject[] popObjects = new PopObject[] {};
 
     public float force;
@@ -43,10 +46,29 @@ public class EzBeam : MonoBehaviour
     };
     List<Point> pointList = new List<Point>();
 
-    List<GameObject> hitInfomations = new List<GameObject>();
-    List<GameObject> popedObjects = new List<GameObject>();
+    struct PopedObject
+    {
+        public GameObject defaultObject;
+        public GameObject optionalObject;
 
-    GameObject defaultPopObject = null;
+        public void SetTransform(Vector3 position, Quaternion rotation)
+        {
+            if( null != defaultObject )
+            {
+                defaultObject.transform.position = position;
+                defaultObject.transform.rotation = rotation;
+            }
+
+            if( null != optionalObject )
+            {
+                optionalObject.transform.position = position;
+                optionalObject.transform.rotation = rotation;
+            }
+        }
+    };
+
+    List<GameObject> hitInfomations = new List<GameObject>();
+    List<PopedObject> popedObjects = new List<PopedObject>();
 
     void LateUpdate()
     {
@@ -55,7 +77,6 @@ public class EzBeam : MonoBehaviour
 
     void Start()
     {
-        SetupDefaultPopObject();
     }
 
     void UpdateHitInformation()
@@ -143,58 +164,26 @@ public class EzBeam : MonoBehaviour
         );
     }
 
-    void SetupDefaultPopObject()
-    {
-        foreach (var p in popObjects)
-        {
-            if (string.IsNullOrEmpty(p.tag) )
-            {
-                defaultPopObject = p.gameObject;
-                break;
-            }
-        }
-    }
-
-    GameObject FindPopObject(string tag)
-    {
-        foreach (var p in popObjects)
-        {
-            if (p.tag == tag)
-            {
-                return p.gameObject;
-            }
-        }
-
-        return defaultPopObject;
-    }
-
     void UpdatePopObjects(int diffTopIndex)
     {
         for (int i = 0; i < hitInfomations.Count; ++i)
         {
-            GameObject popObject = FindPopObject(hitInfomations[i].gameObject.tag);
-            if( null == popObject )
-            {
-                continue;
-            }
-
             var point = pointList[i];
             if (diffTopIndex <= i)
             {
                 if ((popedObjects.Count > i) && (null != popedObjects))
                 {
                     DestroyPopedObject(popedObjects[i]);
-                    popedObjects[i] = Instantiate(popObject, point.position, Quaternion.LookRotation(point.normal)) as GameObject;
+                    popedObjects[i] = InstantiatePopedObject(hitInfomations[i].gameObject.tag, point);
                 }
                 else
                 {
-                    popedObjects.Add(Instantiate(popObject, point.position, Quaternion.LookRotation(point.normal)) as GameObject);
+                    popedObjects.Add(InstantiatePopedObject(hitInfomations[i].gameObject.tag, point));
                 }
             }
             else
             {
-                popedObjects[i].transform.position = point.position;
-                popedObjects[i].transform.rotation = Quaternion.LookRotation(point.normal);
+                popedObjects[i].SetTransform(point.position, Quaternion.LookRotation(point.normal));
             }
         }
 
@@ -207,6 +196,19 @@ public class EzBeam : MonoBehaviour
 
             DestroyPopedObject(popedObjects[i]);
             popedObjects.RemoveAt(i);
+        }
+    }
+
+    void DestroyPopedObject(PopedObject obj)
+    {
+        if( null != obj.defaultObject )
+        {
+            DestroyPopedObject(obj.defaultObject);
+        }
+
+        if( null != obj.optionalObject )
+        {
+            DestroyPopedObject(obj.optionalObject);
         }
     }
 
@@ -227,5 +229,35 @@ public class EzBeam : MonoBehaviour
         {
             Destroy(obj);
         }
+    }
+
+    PopedObject InstantiatePopedObject(string tag, Point point)
+    {
+        PopedObject popedObject = new PopedObject();
+        if (null != defaultPopObjectPrefab)
+        {
+            popedObject.defaultObject = Instantiate(defaultPopObjectPrefab, point.position, Quaternion.LookRotation(point.normal)) as GameObject;
+        }
+
+        var optional = FindOptionalPopObject(tag);
+        if( null != optional )
+        {
+            popedObject.optionalObject = Instantiate(optional, point.position, Quaternion.LookRotation(point.normal)) as GameObject;
+        }
+
+        return popedObject;
+    }
+
+    GameObject FindOptionalPopObject(string tag)
+    {
+        foreach (var p in popObjects)
+        {
+            if (p.tag == tag)
+            {
+                return p.gameObject;
+            }
+        }
+
+        return null;
     }
 }
