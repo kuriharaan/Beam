@@ -3,11 +3,12 @@ using System.Collections;
 
 public class ReflectionPlayer : MonoBehaviour
 {
+    EzBeam beam;
 
     // Use this for initialization
     void Start ()
     {
-
+        beam = GetComponentInChildren<EzBeam>();
     }
 
     // Update is called once per frame
@@ -24,8 +25,7 @@ public class ReflectionPlayer : MonoBehaviour
         float vertical = Input.GetAxis("Vertical") * 0.5f;
         if (Mathf.Abs(vertical) > 0.1f)
         {
-            //transform.position += transform.forward * vertical;
-            //GetComponent<Rigidbody>().MovePosition(transform.position + transform.forward * vertical);
+            beam.lengthMax = Mathf.Clamp(beam.lengthMax + vertical, 1.0f, 20.0f);
         }
     }
 }
