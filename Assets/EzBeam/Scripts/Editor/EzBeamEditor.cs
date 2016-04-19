@@ -1,14 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
+
 
 [CustomEditor(typeof(EzBeam))]
 public class EzBeamEditor : Editor
 {
-    static List<MonoBehaviour> allMonobehaviourList = new List<MonoBehaviour>();
-    static List<GameObject> allGameObjectList = new List<GameObject>();
-
     [MenuItem("GameObject/3D Object/EzBeamLineRenderer")]
     static void CreateObjectEzBeamLineRenderer()
     {
@@ -36,10 +35,23 @@ public class EzBeamEditor : Editor
 
 
     SerializedProperty popObjectsSize;
+    int popupIndex = 0;
+    List<System.Type> typeList = new List<System.Type>();
 
     void OnEnable()
     {
         popObjectsSize = serializedObject.FindProperty("popObjects.Array.size");
+
+        typeList.Clear();
+        var interfaceType = typeof(IEzBeamRenderer);
+        var assembly = System.Reflection.Assembly.GetAssembly(interfaceType);
+        foreach (System.Type type in assembly.GetTypes())
+        {
+            if (type.GetInterfaces().Contains(interfaceType))
+            {
+                typeList.Add(type);
+            }
+        }
     }
 
     public override void OnInspectorGUI()
@@ -85,25 +97,22 @@ public class EzBeamEditor : Editor
         if( null == renderer )
         {
             EditorGUILayout.BeginVertical();
-            GUILayout.Space(30);
+
+            GUILayout.Space(20);
+            EditorGUILayout.LabelField("Select EzBeam Renderer");
+            string[] options = new string[typeList.Count];
+            for (int i = 0; i < typeList.Count; ++i )
+            {
+                options[i] = typeList[i].Name;
+            }
+            popupIndex = EditorGUILayout.Popup(popupIndex, options);
+
+            GUILayout.Space(10);
             if( GUILayout.Button("Add Renderer") )
             {
-                //string[] guids = AssetDatabase.FindAssets("t:Script");
-                //
-                //foreach (string guid in guids)
-                //{
-                //    Debug.Log(AssetDatabase.GUIDToAssetPath(guid));
-                //}
-
-                EzBeam[] beams = FindObjectsOfType(typeof(EzBeam)) as EzBeam[];
-
-                foreach (var b in beams)
-                {
-                    Debug.Log(b.name);
-                }
-
+                beam.gameObject.AddComponent(typeList[popupIndex]);
             }
-            GUILayout.Space(30);
+
 
 
             EditorGUILayout.EndVertical();
@@ -111,71 +120,6 @@ public class EzBeamEditor : Editor
         }
 
         serializedObject.ApplyModifiedProperties();
-    }
-
-    public static List<GameObject> AllObjects
-    {
-        get
-        {
-            if (frameCount != gameobjectLastUpdateFrame)
-            {
-                UpdateAllObjectList();
-                gameobjectLastUpdateFrame = frameCount;
-            }
-
-            return new List<GameObject>(allGameObjectList);
-        }
-    }
-
-    public static long frameCount
-    {
-        get;
-        private set;
-    }
-
-    static long monobehaviourLastUpdateFrame = 0, gameobjectLastUpdateFrame = 0;
-
-
-    static void UpdateAllMonobehaviourList()
-    {
-        allMonobehaviourList.Clear();
-        allMonobehaviourList.AddRange(GetComponentsInList<MonoBehaviour>(AllObjects));
-    }
-
-    public static IEnumerable<T> GetComponentsInList<T>(IEnumerable<GameObject> gameObjects) where T : Component
-    {
-        var componentList = new List<T>();
-
-        foreach (var obj in gameObjects)
-        {
-            var component = obj.GetComponent<T>();
-            if (component != null)
-            {
-                componentList.Add(component);
-            }
-        }
-        return componentList;
-    }
-
-
-    static void UpdateAllObjectList()
-    {
-        allGameObjectList.Clear();
-        foreach (GameObject obj in (GameObject[])Resources.FindObjectsOfTypeAll(typeof(GameObject)))
-        {
-
-            if (obj.hideFlags == HideFlags.NotEditable || obj.hideFlags == HideFlags.HideAndDontSave)
-                continue;
-
-            if (Application.isEditor)
-            {
-                string sAssetPath = AssetDatabase.GetAssetPath(obj.transform.root.gameObject);
-                if (!string.IsNullOrEmpty(sAssetPath))
-                    continue;
-            }
-
-            allGameObjectList.Add(obj);
-        }
     }
 
 }

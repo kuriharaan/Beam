@@ -2,7 +2,7 @@
 using System.Collections;
 
 [ExecuteInEditMode]
-public class EzBeamStripRenderer : MonoBehaviour
+public class EzBeamStripRenderer : MonoBehaviour, IEzBeamRenderer
 {
     [SerializeField]
     Material material;
@@ -11,6 +11,12 @@ public class EzBeamStripRenderer : MonoBehaviour
 
     Mesh mesh;
     MeshFilter meshFilter;
+
+    public void OnUpdate()
+    {
+        CreateMesh();
+        UpdateLineStrip();
+    }
 
     void Start ()
     {
@@ -44,13 +50,6 @@ public class EzBeamStripRenderer : MonoBehaviour
             mesh = new Mesh();
             mesh.name = "Ray";
         }
-    }
-
-
-    void LateUpdate ()
-    {
-        CreateMesh();
-        UpdateLineStrip();
     }
 
     void UpdateLineStrip()

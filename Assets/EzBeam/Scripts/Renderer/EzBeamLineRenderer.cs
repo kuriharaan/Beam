@@ -31,11 +31,6 @@ public class EzBeamLineRenderer : MonoBehaviour, IEzBeamRenderer
         lineRenderer = GetComponent<LineRenderer>();
     }
 
-    void LateUpdate ()
-    {
-        //UpdateColor();
-    }
-
     void OnPreRender()
     {
         UpdateColor();
