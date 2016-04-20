@@ -68,11 +68,14 @@ public class EzBeamEditor : Editor
         {
             var element = list.serializedProperty.GetArrayElementAtIndex(index);
             rect.y += 2;
+
+            element.FindPropertyRelative("tag").stringValue = EditorGUI.TagField(
+                        new Rect(rect.x, rect.y, 120, EditorGUIUtility.singleLineHeight),
+                        GUIContent.none,
+                        element.FindPropertyRelative("tag").stringValue);
+
             EditorGUI.PropertyField(
-                new Rect(rect.x, rect.y, 60, EditorGUIUtility.singleLineHeight),
-                element.FindPropertyRelative("tag"), GUIContent.none);
-            EditorGUI.PropertyField(
-                new Rect(rect.x + 60, rect.y, rect.width - 60 - 30, EditorGUIUtility.singleLineHeight),
+                new Rect(rect.x + 120, rect.y, rect.width - 120 - 30, EditorGUIUtility.singleLineHeight),
                 element.FindPropertyRelative("gameObject"), GUIContent.none);
         };
         list.drawHeaderCallback = (Rect rect) =>

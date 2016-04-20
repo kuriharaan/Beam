@@ -209,7 +209,7 @@ MonoBehaviour:
   lengthMax: 10000
   defaultPopObjectPrefab: {fileID: 0}
   popObjects:
-  - tag: 
+  - tag: Untagged
     gameObject: {fileID: 0}
   force: 0
 --- !u!4 &1300352484
