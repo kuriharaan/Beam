@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEditorInternal;
 
 
 [CustomEditor(typeof(EzBeam))]
@@ -37,6 +38,7 @@ public class EzBeamEditor : Editor
     SerializedProperty popObjectsSize;
     int popupIndex = 0;
     List<System.Type> typeList = new List<System.Type>();
+    ReorderableList list;
 
     void OnEnable()
     {
@@ -52,6 +54,31 @@ public class EzBeamEditor : Editor
                 typeList.Add(type);
             }
         }
+
+        list = new ReorderableList(
+            serializedObject,
+            serializedObject.FindProperty("popObjects"),
+            true,
+            true,
+            true,
+            true
+        );
+        list.drawElementCallback =
+            (Rect rect, int index, bool isActive, bool isFocused) =>
+        {
+            var element = list.serializedProperty.GetArrayElementAtIndex(index);
+            rect.y += 2;
+            EditorGUI.PropertyField(
+                new Rect(rect.x, rect.y, 60, EditorGUIUtility.singleLineHeight),
+                element.FindPropertyRelative("tag"), GUIContent.none);
+            EditorGUI.PropertyField(
+                new Rect(rect.x + 60, rect.y, rect.width - 60 - 30, EditorGUIUtility.singleLineHeight),
+                element.FindPropertyRelative("gameObject"), GUIContent.none);
+        };
+        list.drawHeaderCallback = (Rect rect) =>
+        {
+            EditorGUI.LabelField(rect, "Optional objects with tag.");
+        };
     }
 
     public override void OnInspectorGUI()
@@ -63,25 +90,9 @@ public class EzBeamEditor : Editor
         EditorGUILayout.LabelField(new GUIContent("Pop object on hit."));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("defaultPopObjectPrefab"), new GUIContent("Default"));
 
-        EditorGUILayout.LabelField(new GUIContent("Optional objects with tag."));
-
         EditorGUI.indentLevel = 1;
-        EditorGUILayout.PropertyField(popObjectsSize);
 
-        EditorGUI.indentLevel = 2;
-
-        for (int i = 0; i < popObjectsSize.intValue; ++i)
-        {
-            SerializedProperty tag = serializedObject.FindProperty(string.Format("popObjects.Array.data[{0}].tag", i));
-            SerializedProperty prefab = serializedObject.FindProperty(string.Format("popObjects.Array.data[{0}].gameObject", i));
-
-            EditorGUILayout.BeginHorizontal();
-
-            tag.stringValue = EditorGUILayout.TagField(tag.stringValue);
-            EditorGUILayout.PropertyField(prefab, GUIContent.none);
-
-            EditorGUILayout.EndHorizontal();
-        }
+        list.DoLayoutList();
 
         EditorGUI.indentLevel = 0;
         EditorGUILayout.BeginHorizontal();
