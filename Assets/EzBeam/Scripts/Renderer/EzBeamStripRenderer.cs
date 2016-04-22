@@ -12,7 +12,7 @@ public class EzBeamStripRenderer : MonoBehaviour, IEzBeamRenderer
     Mesh mesh;
     MeshFilter meshFilter;
 
-    public void OnUpdate()
+    public void OnPointUpdated()
     {
         CreateMesh();
         UpdateLineStrip();

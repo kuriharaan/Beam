@@ -7,7 +7,7 @@ public class EzBeamLineRenderer : MonoBehaviour, IEzBeamRenderer
     EzBeam beam;
     LineRenderer lineRenderer;
 
-    public void OnUpdate()
+    public void OnPointUpdated()
     {
         UpdateColor();
     }
@@ -28,7 +28,18 @@ public class EzBeamLineRenderer : MonoBehaviour, IEzBeamRenderer
             return;
         }
 
+        CreateLineRenderer();
+    }
+
+    void CreateLineRenderer()
+    {
         lineRenderer = GetComponent<LineRenderer>();
+        if( null != lineRenderer )
+        {
+            return;
+        }
+
+        lineRenderer = gameObject.AddComponent<LineRenderer>();
     }
 
     void OnPreRender()

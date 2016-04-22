@@ -9,6 +9,20 @@ using UnityEditorInternal;
 [CustomEditor(typeof(EzBeam))]
 public class EzBeamEditor : Editor
 {
+    public class BackgroundColorScope : GUI.Scope
+    {
+        private Color color;
+        public BackgroundColorScope(Color color)
+        {
+            this.color = GUI.backgroundColor;
+            GUI.backgroundColor = color;
+        }
+        protected override void CloseScope()
+        {
+            GUI.backgroundColor = color;
+        }
+    }
+
     [MenuItem("GameObject/3D Object/EzBeamLineRenderer")]
     static void CreateObjectEzBeamLineRenderer()
     {
@@ -34,16 +48,14 @@ public class EzBeamEditor : Editor
         Selection.activeObject = obj;
     }
 
+    static Color addRendererButtonColor = new Color(1.0f, 0.7f, 0.7f);
 
-    SerializedProperty popObjectsSize;
     int popupIndex = 0;
     List<System.Type> typeList = new List<System.Type>();
     ReorderableList list;
 
     void OnEnable()
     {
-        popObjectsSize = serializedObject.FindProperty("popObjects.Array.size");
-
         typeList.Clear();
         var interfaceType = typeof(IEzBeamRenderer);
         var assembly = System.Reflection.Assembly.GetAssembly(interfaceType);
@@ -91,17 +103,19 @@ public class EzBeamEditor : Editor
 
         EditorGUI.indentLevel = 0;
         EditorGUILayout.LabelField(new GUIContent("Pop object on hit."));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("defaultPopObjectPrefab"), new GUIContent("Default"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("defaultPopObjectPrefab"), GUIContent.none);
 
         EditorGUI.indentLevel = 1;
 
         list.DoLayoutList();
 
         EditorGUI.indentLevel = 0;
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("enableReflectionMax"), new GUIContent("Reflection limitation"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("reflectionMax"), GUIContent.none);
-        EditorGUILayout.EndHorizontal();
+
+        using (var scope = new GUILayout.HorizontalScope())
+        {
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("enableReflectionMax"), new GUIContent("Reflection limitation"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("reflectionMax"), GUIContent.none);
+        }
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("lengthMax"), new GUIContent("length"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("force"), new GUIContent("force"));
@@ -122,9 +136,13 @@ public class EzBeamEditor : Editor
             popupIndex = EditorGUILayout.Popup(popupIndex, options);
 
             GUILayout.Space(10);
-            if( GUILayout.Button("Add Renderer") )
+
+            using (var scope = new BackgroundColorScope(addRendererButtonColor))
             {
-                beam.gameObject.AddComponent(typeList[popupIndex]);
+                if (GUILayout.Button("Add Renderer") )
+                {
+                    beam.gameObject.AddComponent(typeList[popupIndex]);
+                }
             }
 
 

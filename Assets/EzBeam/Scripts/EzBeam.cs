@@ -156,11 +156,10 @@ public class EzBeam : MonoBehaviour
             UpdatePopObjects(diffTopIndex);
         }
 
-
         ExecuteEvents.Execute<IEzBeamRenderer>(
             gameObject,
             null,
-            (recieveTarget, y) => recieveTarget.OnUpdate()
+            (recieveTarget, y) => recieveTarget.OnPointUpdated()
         );
     }
 
